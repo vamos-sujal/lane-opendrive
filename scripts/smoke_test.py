@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import importlib
+import traceback
 
 
 def main() -> int:
@@ -28,8 +29,13 @@ def main() -> int:
         device=args.device,
         repo_path=args.repo_path,
     )
-    detector.load_weights()
-    detector.warmup()
+    try:
+        detector.load_weights()
+        detector.warmup()
+    except Exception as exc:
+        print(f"UFLD checkpoint smoke test failed: {type(exc).__name__}: {exc}", flush=True)
+        traceback.print_exc()
+        raise SystemExit(2) from exc
     print(f"Smoke test passed on {device}: UFLD checkpoint loaded and warmed up")
     return 0
 

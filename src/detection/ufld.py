@@ -48,7 +48,12 @@ class UFLDDetector(BaseDetector):
         from model.model import parsingNet
 
         self.model = parsingNet(pretrained=False, backbone="18", cls_dim=(201, 18, 4), use_aux=False)
-        state = torch.load(self.checkpoint_path, map_location="cpu")
+        # Explicitly retain the checkpoint's tensor/state-dict behavior across
+        # PyTorch versions whose default ``weights_only`` setting changed.
+        try:
+            state = torch.load(self.checkpoint_path, map_location="cpu", weights_only=False)
+        except TypeError:
+            state = torch.load(self.checkpoint_path, map_location="cpu")
         state = state.get("model", state)
         state = {key.replace("module.", "", 1): value for key, value in state.items()}
         self.model.load_state_dict(state, strict=False)
