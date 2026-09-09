@@ -1,0 +1,15 @@
+numpy==1.26.4
+scipy==1.14.0
+opencv-python==4.10.0.84
+matplotlib==3.9.2
+PyYAML==6.0.2
+lxml==5.3.0
+shapely==2.0.6
+pytest==8.3.3
+pandas==2.2.3
+xmlschema==4.5.1
+networkx==3.0.3
+gdown==5.2.0
+pip>=24.0
+# Note: install PyTorch separately for the target runtime.
+# For Colab/T4 use a CUDA-enabled wheel from the official PyTorch index.

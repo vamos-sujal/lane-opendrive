@@ -1,1 +1,36 @@
-# lane-opendrive
+# ADAS Lane2OpenDRIVE
+
+This repository defines a fail-closed monocular lane perception pipeline for Colab/T4. It separates detector output, temporal tracking, geometry, topology, metric validation, and OpenDRIVE validation. It never invents camera calibration, lane width, vehicle speed, scale, or road length.
+
+## Colab
+
+Open `notebooks/ADAS_Lane2OpenDRIVE_Colab.ipynb` in Google Colab with a T4 runtime. The notebook mounts Drive, clones this repository, verifies CUDA, installs pinned dependencies, checks the detector contract, resolves one video from:
+
+`/content/drive/MyDrive/lane_to_opendrive/input`
+
+Use `input.mp4` or place exactly one `.mp4`/`.mov`/`.avi` file there. Results are written to:
+
+`/content/drive/MyDrive/lane_to_opendrive/runs/<run_id>/`
+
+## Local checks
+
+```bash
+python -m py_compile $(find src scripts -name '*.py')
+PYTHONPATH=. python -m pytest -q
+```
+
+The full detector execution is intended for a CUDA Colab runtime, not this CPU development environment.
+
+## Detector and weights
+
+The Colab default uses the official Ultra-Fast-Lane-Detection CULane checkpoint because it accepts arbitrary raw frames and is practical on a T4. It produces real 2D lane pixels, overlays, counts, and temporal tracks. LATR remains available as a research 3D backend, but its official OpenLane runtime is not a raw-MP4 API.
+
+Metric 3D distance, vehicle speed, top-down metric geometry, and OpenDRIVE remain disabled unless trusted camera calibration or telemetry is supplied. The system does not convert 2D pixels to invented meters.
+
+Without a verified detector runtime and supplied metric calibration, the pipeline produces a `NON_METRIC` report and does not emit an OpenDRIVE file. This is intentional.
+
+## Safety contract
+
+OpenDRIVE generation requires `METRIC_VALID` geometry backed by supplied calibration or trusted telemetry. Missing calibration, invalid coordinates, XML errors, inconsistent lane structures, and uncertain scale are reported as failures rather than converted into plausible-looking meters.
+
+See [docs/ARCHITECTURE_DECISION.md](docs/ARCHITECTURE_DECISION.md) and [configs/camera.yaml](configs/camera.yaml).

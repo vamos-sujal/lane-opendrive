@@ -1,0 +1,18 @@
+camera:
+  calibration_available: false
+  source: none
+  metric_status: METRIC_UNCERTAIN
+  intrinsics: null
+  height_m: null
+  pitch_deg: null
+  roll_deg: null
+  notes: |
+    No trusted camera calibration or vehicle telemetry was supplied.
+    Metric geometry remains unavailable and must not be fabricated.
+
+pipeline:
+  detector: latr
+  tracker: persistent_lane_ids
+  safe_mode: true
+  require_metric_validation: false
+  fail_closed_on_uncertain_scale: true

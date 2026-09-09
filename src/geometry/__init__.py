@@ -1,0 +1,1 @@
+"""Lane geometry fitting and metric validity gates."""
