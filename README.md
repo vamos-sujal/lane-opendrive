@@ -25,9 +25,13 @@ The full detector execution is intended for a CUDA Colab runtime, not this CPU d
 
 The Colab default uses the official Ultra-Fast-Lane-Detection CULane checkpoint because it accepts arbitrary raw frames and is practical on a T4. It produces real 2D lane pixels, overlays, counts, and temporal tracks. LATR remains available as a research 3D backend, but its official OpenLane runtime is not a raw-MP4 API.
 
-Metric 3D distance, vehicle speed, top-down metric geometry, and OpenDRIVE remain disabled unless trusted camera calibration or telemetry is supplied. The system does not convert 2D pixels to invented meters.
+Metric distance, calibrated visual-motion speed, top-down metric geometry, and OpenDRIVE remain disabled unless trusted camera intrinsics, camera height, downward pitch, and a measured lane width are supplied in `configs/camera.yaml`. Telemetry is not required for the visual-motion estimate, but monocular video alone cannot identify absolute scale. The system does not convert 2D pixels to invented meters.
 
-Without a verified detector runtime and supplied metric calibration, the pipeline produces a `NON_METRIC` report and does not emit an OpenDRIVE file. This is intentional.
+Without a verified detector runtime and supplied metric calibration, the pipeline produces a `NON_METRIC` report and does not emit an OpenDRIVE file. This is intentional. Calibration values must come from a checkerboard/target calibration or manufacturer specification and must match the video camera and resolution.
+
+## Metric configuration
+
+Fill the null values in `configs/camera.yaml` with measured values. The camera model uses x=right, y=forward, z=up, and `pitch_deg` is positive downward. Do not set `calibration_available: true` until every value is known. The run reports `VISUAL_MOTION_CALIBRATED` only when tracked static lane evidence supports a speed estimate; this is a camera-motion estimate, not a claim of independently verified vehicle speed.
 
 ## Safety contract
 

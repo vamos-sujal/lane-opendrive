@@ -2,13 +2,21 @@ camera:
   calibration_available: false
   source: none
   metric_status: METRIC_UNCERTAIN
-  intrinsics: null
+  # Supply values from camera calibration; do not guess these values.
+  intrinsics:
+    fx: null
+    fy: null
+    cx: null
+    cy: null
   height_m: null
   pitch_deg: null
   roll_deg: null
+  lane_width_m: null
   notes: |
-    No trusted camera calibration or vehicle telemetry was supplied.
-    Metric geometry remains unavailable and must not be fabricated.
+    Metric output requires trusted intrinsics, camera height, downward pitch,
+    and measured lane_width_m. Distortion must be corrected before inference.
+    No vehicle telemetry is required for calibrated visual-motion speed, but
+    speed is refused when static lane evidence is insufficient.
 
 pipeline:
   detector: latr

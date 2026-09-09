@@ -16,9 +16,9 @@ def main() -> int:
     device = torch.device(args.device)
     tensor = torch.ones((2, 2), device=device)
     assert float(tensor.sum().item()) == 4.0
-    detector = importlib.import_module("src.detection.latr")
-    assert detector.LATRDetector.name == "latr"
-    print(f"Smoke test passed on {device}: detector contract importable")
+    detector = importlib.import_module("src.detection.ufld")
+    assert detector.UFLDDetector.name == "ufld_culane"
+    print(f"Smoke test passed on {device}: UFLD detector contract importable")
     return 0
 
 

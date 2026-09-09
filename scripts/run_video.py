@@ -47,12 +47,13 @@ def main() -> int:
     (out_dir / "config_used.yaml").write_text(yaml.safe_dump(cfg, sort_keys=True), encoding="utf-8")
 
     try:
-        summary = run_pipeline(resolved_input, str(out_dir), args.checkpoint, args.detector)
+        summary = run_pipeline(resolved_input, str(out_dir), args.checkpoint, args.detector, cfg["camera"])
         print(f"Resolved input: {resolved_input}")
         print(f"Processed frames: {summary['processed_frames'] if 'processed_frames' in summary else 'see input_metadata.json'}")
         print(f"Persistent tracks: {summary['persistent_track_count']}")
         print(f"Detector error: {summary['detector_error'] or 'none'}")
-        print("Metric geometry remains NON_METRIC unless trusted calibration/telemetry is supplied.")
+        print(f"Metric status: {summary.get('metric_status', 'unknown')}")
+        print(f"OpenDRIVE emitted: {summary.get('open_drive_emitted', False)}")
         return 0
     except Exception as exc:
         with open(out_dir / "logs" / "pipeline.log", "w", encoding="utf-8") as f:
