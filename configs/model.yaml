@@ -1,7 +1,7 @@
 name: ufld_culane
 checkpoint:
   # Official CULane checkpoint from cfzd/Ultra-Fast-Lane-Detection README.
-  url: https://drive.google.com/uc?id=1WCYyur5ZaWczH15ecmeDowrW30xcLrCn
+  url: https://drive.google.com/uc?id=1zXBRTw50WOzvUp6XKsi8Zrk3MUC3uFuq
   md5: null
   sha256: null
   path: weights/ufld_culane_18.pth

@@ -56,7 +56,16 @@ class UFLDDetector(BaseDetector):
             state = torch.load(self.checkpoint_path, map_location="cpu")
         state = state.get("model", state)
         state = {key.replace("module.", "", 1): value for key, value in state.items()}
-        self.model.load_state_dict(state, strict=False)
+        try:
+            self.model.load_state_dict(state, strict=False)
+        except RuntimeError as exc:
+            raise RuntimeError(
+                "UFLD checkpoint architecture mismatch. Expected the official "
+                "CULane ResNet-18 head cls_dim=(201, 18, 4); the supplied file "
+                "appears to be for a different dataset (often TuSimple). "
+                "Delete the incompatible checkpoint and download the configured "
+                "CULane checkpoint."
+            ) from exc
         self.model.to(self.device).eval()
 
     def warmup(self) -> None:
