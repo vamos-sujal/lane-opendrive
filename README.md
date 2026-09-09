@@ -38,3 +38,9 @@ Fill the null values in `configs/camera.yaml` with measured values. The camera m
 OpenDRIVE generation requires `METRIC_VALID` geometry backed by supplied calibration or trusted telemetry. Missing calibration, invalid coordinates, XML errors, inconsistent lane structures, and uncertain scale are reported as failures rather than converted into plausible-looking meters.
 
 See [docs/ARCHITECTURE_DECISION.md](docs/ARCHITECTURE_DECISION.md) and [configs/camera.yaml](configs/camera.yaml).
+
+## Production model baseline
+
+For a fresh multi-model T4 run, use [notebooks/Production_RoadMetrics_Colab.ipynb](notebooks/Production_RoadMetrics_Colab.ipynb). It preflights real Ultralytics vehicle tracking, Depth Anything V2 Metric Outdoor, and Cityscapes SegFormer checkpoints before reading the video. Results use explicit `MEASURED`, `ESTIMATED`, and `UNAVAILABLE` statuses.
+
+This baseline does not convert Cityscapes road masks into lane markings and does not claim junction topology without a validated lane/topology checkpoint. Those adapters remain unavailable until a checkpoint validated for the target dashcam domain is supplied. That gate is intentional.

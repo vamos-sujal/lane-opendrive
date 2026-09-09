@@ -78,7 +78,12 @@ def run_pipeline(input_path: str, output_dir: str, checkpoint: str | None = None
             previous_positions = current_positions
             all_observations.extend(observations)
             frame_lane_counts.append(len(observations))
-            visualizations.write(frame, observations, tracks, "LATR unavailable / fail-closed" if detector_error else "LATR inference")
+            visualizations.write(
+                frame,
+                observations,
+                tracks,
+                f"{detector_name} unavailable / fail-closed" if detector_error else f"{detector_name} inference",
+            )
             processed += 1
     finally:
         reader.close()
